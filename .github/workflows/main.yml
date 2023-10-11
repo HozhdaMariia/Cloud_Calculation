@@ -1,1 +1,40 @@
+name: CI/CD Pipeline
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Out Code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9  
+
+    - name: Install Dependencies
+      run: |
+        pip install pytest
+        pip install -r requirements.txt # Команда для встановлення залежностей з проекту
+    - name: Run Test 1
+      run: pytest -s test_1.py
+      continue-on-error: true  # Продовжити виконання пайплайну, навіть якщо цей тест помилковий
+
+    - name: Run Test 2
+      run: pytest -s test_2.py
+      continue-on-error: true  # Продовжити виконання пайплайну, навіть якщо цей тест помилковий
+  deploy:
+    needs: 'tests'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy
+      run: |
+        # Симулюємо деплой, виводимо повідомлення "Deployed" в консоль
+        echo "Deployed"
